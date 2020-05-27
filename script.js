@@ -29,6 +29,50 @@ function addSearch (searchTerm){
         //get item and add to searchHistory
         searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
     }
+searchHistory.push(searchTerm);
+//remove search history starting from oldest search
+if(searchHistory.length > 5){
+    searchHistory.shift();
+}
+//store updated history
+localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
 
+//call  function 
+updateHistory();
 }
 
+//update search history display from local
+function updateHistory(){
+    //clear div
+    $searchHistory.textContent = "";
+    searchHistory = JSON.parse(localStorage.getItem("searchHistory")); 
+    //loop array backwards to display most recent
+    for (var j = searchHistory.length -1; j >= 0; j --){
+        var $pastSearch = document.createElement("li");
+        $pastSearch.textContent = searchHistory [j];
+        $pastSearch.classList.add("list-group-item");
+        $pastSearch.setAttribute("data-value", searchHistory[j]);
+
+        $searchHistory.appendChild($pastSearch);
+    }
+    $history.classList.remove("hide");
+}
+//call api search function and clear response divs
+function searchHandler(searchTerm) {
+    $weatherCard.classList.add("hide");
+    $forecast.classlist("hide");
+    $weatherBody.textContent = "";
+    $fiveDays.textContent = "";
+    //uv ajax request
+    currentweatherSearch(searchTerm);
+    fivedaySearch(searchTerm);
+}
+//current weather api call
+function currentweatherSearch(searchTerm); {
+    var cityCoords;
+    var weatherUrl = urlStart + "weather?q=" + searchTerm + "&units=imperial&APPID=" + APIkey;
+
+    $.ajax({
+        url: weatherUrl
+    })
+}
