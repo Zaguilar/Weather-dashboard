@@ -47,11 +47,11 @@ updateHistory();
 function updateHistory(){
   //clear div
   $searchHistory.textContent = "";
-  //console.log(searchHistory);
+ 
   searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
  //loop array backwards to display most recent                                                 
   for (var j = searchHistory.length - 1; j >= 0; j --){                                                                   
-    //console.log(searchHistory[j]);
+   
     var $pastSearch = document.createElement("li");
     $pastSearch.textContent = searchHistory[j];
     $pastSearch.classList.add("list-group-item");
@@ -86,7 +86,7 @@ function currentweatherSearch(searchTerm) {
     method: "GET"
   
   }).then(function (weatherResponse) {
-    //console.log(weatherResponse);
+   
     //call function to create elements displaying response
     displayCurrentweather(weatherResponse);
 
@@ -130,7 +130,7 @@ function fivedaySearch(searchTerm) {
 
 //add current weather response to page
 function displayCurrentweather(weatherResponse){
-  //console.log(weatherResponse);
+ 
   var $weatherHeader = document.createElement("h1");
   var timeNow = moment();
   var currentDate = "(" + timeNow.format("MM/DD/YYYY") + ")";
@@ -180,11 +180,9 @@ function displayForecast(forecastResponse){
   
   for (var i = 0; i < forecastResponse.cnt; i ++) {
     var responseRef = forecastResponse.list[i];
-    //console.log(responseRef);
-    //console.log(i);
+   
     var responseDate = moment(responseRef.dt_txt);
-    //console.log(responseDate);
-
+ 
     if (parseInt(responseDate.format("HH")) == 12){
 
       var $forecastCard = document.createElement("div");
@@ -217,7 +215,7 @@ function displayForecast(forecastResponse){
       $fivedayDiv.appendChild($forecastCard);
     }
   }
-  //console.log("done");
+
   $forecastSection.classList.remove("hide");
 }
 
@@ -232,7 +230,7 @@ $searchForm.addEventListener("submit", function (event) {
   if (!searchTerm) {
     return false;
   }
-  //console.log(searchTerm);
+
   //send it to search weather api
   searchHandler(searchTerm);
 
