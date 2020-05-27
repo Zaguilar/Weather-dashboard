@@ -73,6 +73,65 @@ function currentweatherSearch(searchTerm); {
     var weatherUrl = urlStart + "weather?q=" + searchTerm + "&units=imperial&APPID=" + APIkey;
 
     $.ajax({
-        url: weatherUrl
-    })
+        url: weatherUrl,
+        method: "GET"
+    }).then(function (weatherResponse){
+        //call function to create elements displaying response
+        displayCurrentweather(weatherResponse);
+
+        //coordinates sent to uv api call
+        cityCoords = weatherResponse.coord;
+        currentUVSearch(cityCoords);
+    });
 }
+
+//call current UV API
+function currentUVSearch(cityCoords) {
+    //coordinate string for api call parameters
+    var searchCoords = "lat=" + cityCoords.lat + "&lon=" + cityCoords.lon;
+  
+    var uvUrl = urlStart + "uvi?" + searchCoords + "&APPID=" + APIkey;
+  
+    $.ajax({
+      url: uvUrl,
+      method: "GET"
+    }).then(function(uvResponse){
+      //call function to create html element for uv response:
+      displayCurrentUV(uvResponse);
+    });
+  
+  }
+  
+  //call forecast API
+function fivedaySearch(searchTerm) {
+
+    var forecastUrl = urlStart + "forecast?q=" + searchTerm + "&units=imperial&APPID=" + APIkey;
+  
+    $.ajax({
+      url: forecastUrl,
+      method: "GET"
+    }).then(function(forecastResponse){
+      //call function to create html elements for forecast response:
+      displayForecast(forecastResponse);
+    });
+  
+  }
+  
+  //add current weather response to page:
+function displayCurrentweather(weatherResponse){
+    //console.log(weatherResponse);
+    var $weatherHeader = document.createElement("h1");
+  
+    var timeNow = moment();
+    var currentDate = "(" + timeNow.format("MM/DD/YYYY") + ")";
+  
+    $weatherHeader.textContent = weatherResponse.name + " " + currentDate;
+    
+     //display weather icon
+  var $weatherIcon = document.createElement("img");
+  $weatherIcon.setAttribute("src", "https://openweathermap.org/img/w/" + weatherResponse.weather[0].icon + ".png")
+  $weatherIcon.setAttribute("alt", weatherResponse.weather[0].main + " - " + weatherResponse.weather[0].description);
+
+  //temp div
+  var $weatherTemp = document.createElement("div");
+  $weatherTemp.textContent = "Temperature: " + (weatherResponse.main.temp) + " F°";
